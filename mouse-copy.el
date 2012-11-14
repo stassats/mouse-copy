@@ -9,6 +9,9 @@
   :global t
   :keymap mouse-mode-map)
 
+(defcustom mouse-mode-reindent t
+  "Reindent the copied s-exp at the new place.")
+
 (define-key mouse-mode-map [C-mouse-1] 'ignore)
 (define-key mouse-mode-map [C-drag-mouse-1] 'ignore)
 (define-key mouse-mode-map [C-down-mouse-1] 'mouse-insert-sexp-at-point)
@@ -38,7 +41,12 @@
                  (backward-char)
                  (looking-at "\\s-\\|\\s\(")))
       (insert " "))
-    (insert sexp)
+    (let ((point (point)))
+      (insert sexp)
+      (when mouse-mode-reindent
+       (save-excursion
+        (goto-char point)
+        (indent-pp-sexp))))
     (unless (or (eolp)
                 (and (minibufferp)
                      (= (point) (minibuffer-prompt-end)))
