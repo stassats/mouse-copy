@@ -42,7 +42,7 @@
                  (looking-at "\\s-\\|\\s\(")))
       (insert " "))
     (let ((point (point)))
-      (insert sexp)
+      (insert-for-yank sexp)
       (when mouse-mode-reindent
        (save-excursion
         (goto-char point)
